@@ -17,3 +17,15 @@ class User(UserMixin, db.Model):
     # date_updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
     
     
+    def to_json(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'username': self.username,
+            'email': self.email,
+            'is_admin': self.is_admin,
+            'is_active': True
+        }
+    
+    

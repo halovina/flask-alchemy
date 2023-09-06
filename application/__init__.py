@@ -13,4 +13,6 @@ def create_app():
     db.init_app(app)
     
     with app.app_context():
+        from .userservice import user_api_blueprint
+        app.register_blueprint(user_api_blueprint)
         return app
