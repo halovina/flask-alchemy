@@ -7,7 +7,7 @@ if os.path.exists(dotenv_path):
     
     
 class Config:
-    SCRET_KEY = os.environ['CONFIGURATION_SETUP']
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 class DevelopmentConfig:
@@ -15,6 +15,7 @@ class DevelopmentConfig:
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
     SQLALCHEMY_ECHO = True
+    SECRET_KEY = os.environ['SECRET_KEY']
     
 
 class ProductionConfig:

@@ -2,6 +2,7 @@
 from . import db
 from datetime import datetime
 from flask_login import UserMixin
+from passlib.hash import sha256_crypt
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,4 +29,5 @@ class User(UserMixin, db.Model):
             'is_active': True
         }
     
-    
+    def encode_api_key(self):
+        self.api_key = sha256_crypt.hash(self.username + str(datetime.utcnow))
