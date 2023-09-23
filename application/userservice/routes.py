@@ -4,6 +4,7 @@ from passlib.hash import sha256_crypt
 from .. import db
 from . import user_api_blueprint
 from flask_login import login_user
+from application.userservice.decorators import header_required
 
 
 @user_api_blueprint.route('/api/user/create', methods=['POST'])
@@ -56,3 +57,23 @@ def post_login():
     )
             
             
+@user_api_blueprint.route('/api/user/all', methods=['GET'])
+@header_required    
+def get_all_user():
+    users = User.query.all()
+    data = []
+    for x in users:
+        xusers = {}
+        xusers['user_id'] = x.id
+        xusers['username'] = x.username
+        xusers['first_name'] = x.first_name
+        xusers['last_name'] = x.last_name
+        xusers['email'] = x.email
+        data.append(xusers)
+        
+    return make_response(
+        jsonify({
+            'message':'success',
+            'data': data
+        }), 200
+    )
