@@ -4,7 +4,8 @@ from passlib.hash import sha256_crypt
 from .. import db
 from . import user_api_blueprint
 from flask_login import login_user
-from application.userservice.decorators import header_required
+from application.userservice.decorators import header_required, required_param
+from application.userservice.user_schema import UserLoginSchema
 
 
 @user_api_blueprint.route('/api/user/create', methods=['POST'])
@@ -35,7 +36,9 @@ def user_register():
     )
     
 @user_api_blueprint.route('/api/user/login', methods=['POST'])
+@required_param(UserLoginSchema())
 def post_login():
+
     username = request.json['username']
     user =  User.query.filter_by(username=username).first()
     if user:

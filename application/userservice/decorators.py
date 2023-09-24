@@ -1,6 +1,7 @@
 from functools import wraps
 from flask import request, make_response, jsonify
 import os
+from marshmallow import ValidationError
 
 
 def header_required(f):
@@ -17,3 +18,22 @@ def header_required(f):
             )
                 
     return decorated_function
+
+
+def required_param(schema):
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            try:
+                schema.load(request.get_json())
+            except ValidationError as err:
+                error = {
+                    'status':'errror',
+                    'messages': err.messages
+                }
+                return make_response(
+                    jsonify(error), 400
+                )
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
