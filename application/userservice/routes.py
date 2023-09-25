@@ -6,6 +6,8 @@ from . import user_api_blueprint
 from flask_login import login_user
 from application.userservice.decorators import header_required, required_param
 from application.userservice.user_schema import UserLoginSchema
+import asyncio
+from .utils import example_async_without_await
 
 
 @user_api_blueprint.route('/api/user/create', methods=['POST'])
@@ -79,4 +81,13 @@ def get_all_user():
             'message':'success',
             'data': data
         }), 200
+    )
+    
+@user_api_blueprint.route('/api/user/test-async', methods=['GET'])
+async def get_test_async_without_await():
+    asyncio.create_task(example_async_without_await())
+    return make_response(
+        jsonify({
+            'message':'OK'
+        })
     )
