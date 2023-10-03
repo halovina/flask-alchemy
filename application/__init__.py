@@ -17,4 +17,8 @@ def create_app():
     with app.app_context():
         from .userservice import user_api_blueprint
         app.register_blueprint(user_api_blueprint)
+        
+        from .uploadservice import upload_api_blueprint
+        app.register_blueprint(upload_api_blueprint)
+        
         return app

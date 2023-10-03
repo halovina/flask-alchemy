@@ -74,8 +74,9 @@ def get_all_user():
         xusers['first_name'] = x.first_name
         xusers['last_name'] = x.last_name
         xusers['email'] = x.email
-        data.append(xusers)
         
+        data.append(xusers)
+   
     return make_response(
         jsonify({
             'message':'success',

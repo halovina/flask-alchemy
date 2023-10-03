@@ -17,6 +17,8 @@ class User(UserMixin, db.Model):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     # date_updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
     
+    __tablename__ = "user"
+    
     
     def to_json(self):
         return {
@@ -31,3 +33,4 @@ class User(UserMixin, db.Model):
     
     def encode_api_key(self):
         self.api_key = sha256_crypt.hash(self.username + str(datetime.utcnow))
+        
