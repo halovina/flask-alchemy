@@ -1,4 +1,4 @@
-from ..models import User
+from ..models import User, Address
 from flask import request, jsonify, make_response
 from passlib.hash import sha256_crypt
 from .. import db
@@ -74,6 +74,18 @@ def get_all_user():
         xusers['first_name'] = x.first_name
         xusers['last_name'] = x.last_name
         xusers['email'] = x.email
+        
+        userAddress = Address.query.join(
+            User, Address.user_id == User.id
+        ).filter(Address.user_id == x.id).all()
+        
+        user_address = []
+        for xaddress in userAddress:
+            uad = {}
+            uad['address'] = xaddress.address
+            user_address.append(uad)
+        
+        xusers['user_address'] = user_address
         
         data.append(xusers)
    

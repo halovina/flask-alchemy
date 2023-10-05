@@ -34,3 +34,13 @@ class User(UserMixin, db.Model):
     def encode_api_key(self):
         self.api_key = sha256_crypt.hash(self.username + str(datetime.utcnow))
         
+class Address(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.Text, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', back_populates="addresses")
+    
+    __tablename__ = "addresses"
+    
+User.addresses = db.relationship("Address", order_by=Address.id, back_populates="user")
+        
