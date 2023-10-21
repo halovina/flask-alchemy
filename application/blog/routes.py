@@ -31,3 +31,28 @@ def blog_post():
         }
     )
     
+
+@blog_api_blueprint.route('/api/blog-post', methods=['GET'])
+def blogpost_getlistdata():
+    blog_post = Post.query.all()
+    lst = []
+    for bl in blog_post:
+        data = {}
+        data['title'] = bl.title
+        data['content'] = bl.content
+        
+        tag_list = [] #['tag1','tag2']
+        for tg in bl.tags:
+            tag_list.append(tg.name)
+            
+        data['tags'] = tag_list
+        lst.append(data)
+        
+    return jsonify(
+        {
+            'message':'request success',
+            'count': len(lst),
+            'data': lst
+        }
+    )
+        
