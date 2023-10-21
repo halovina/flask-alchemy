@@ -44,3 +44,26 @@ class Address(db.Model):
     
 User.addresses = db.relationship("Address", order_by=Address.id, back_populates="user")
         
+  
+
+post_tag = db.Table('post_tag',
+                    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+                    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+                    )
+      
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    
+    __tablename__ = "tag"
+    
+    def __repr__(self):
+        return f'<tag "{self.name}">'
+    
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
+    content = db.Column(db.Text)
+    tags = db.relationship('Tag', secondary=post_tag, backref='posts')
+    
+    __tablename__ = "post"

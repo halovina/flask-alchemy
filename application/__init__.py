@@ -21,4 +21,7 @@ def create_app():
         from .uploadservice import upload_api_blueprint
         app.register_blueprint(upload_api_blueprint)
         
+        from .blog import blog_api_blueprint
+        app.register_blueprint(blog_api_blueprint)
+        
         return app
