@@ -2,6 +2,7 @@ from . import blog_api_blueprint
 from flask import request, make_response, jsonify
 from application.models import Post, Tag
 from .. import db
+from sqlalchemy import text
 
 
 @blog_api_blueprint.route('/api/blog-post/create', methods=['POST'])
@@ -55,4 +56,29 @@ def blogpost_getlistdata():
             'data': lst
         }
     )
+    
+
+@blog_api_blueprint.route('/api/blog-post-raw-sql', methods=['GET'])
+def blogpost_execute_raw_sql():
+    idpost = request.args.get('idpost')
+    if idpost:
+        sql = """select * from post where id= :id"""
+    else:
+        sql = """select * from post"""
+    
+    result = db.session.execute(text(sql),{'id':idpost})
+    lst = []
+    for x in result:
+        data = {}
+        data['id'] = x.id
+        data['title'] = x.title
+        data['content'] = x.content
+        lst.append(data)
         
+    return jsonify(
+        {
+            'message':'request success',
+            'count': len(lst),
+            'data': lst
+        }
+    )
