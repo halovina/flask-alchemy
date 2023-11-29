@@ -82,3 +82,27 @@ def blogpost_execute_raw_sql():
             'data': lst
         }
     )
+    
+
+
+@blog_api_blueprint.route('/api/blog-post-pagination', methods=['GET'])
+def blogpost_pagination():
+    #/api/blog-post-pagination?page=1&per_page=2
+    
+    #query params
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    
+    post_list = Post.query.paginate(page=page, per_page=per_page)
+    
+    results = {
+        "results": [{"id": b.id, "title":b.title, "content":b.content} for b in post_list],
+        "pagination": {
+            "count": post_list.total,
+            "page": page,
+            "per_page": per_page,
+            "pages": post_list.pages
+        }
+    }
+    
+    return jsonify(results)
