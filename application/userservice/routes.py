@@ -63,7 +63,7 @@ def post_login():
             
             
 @user_api_blueprint.route('/api/user/all', methods=['GET'])
-# @header_required    
+@header_required    
 def get_all_user():
     users = User.query.all()
     data = []

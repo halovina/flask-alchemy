@@ -1,7 +1,13 @@
 import json
+import os
 
 def test_get_userdata(tclient, init_mock_userdata):
-    resp = tclient.get('/api/user/all')
+    os.environ['CLIENT_APIKEY'] = '1233434345@122323SDSD'
+    headers = {
+        'client-api-key':'1233434345@122323SDSD'
+    }
+    
+    resp = tclient.get('/api/user/all', headers=headers)
     assert resp.status_code == 200
     
     resp_data  = json.loads(resp.data)
