@@ -8,6 +8,8 @@ from application.userservice.decorators import header_required, required_param
 from application.userservice.user_schema import UserLoginSchema
 import asyncio
 from .utils import example_async_without_await
+from datetime import datetime
+from application.internal.pyjwt import jwtEncode
 
 
 @user_api_blueprint.route('/api/user/create', methods=['POST'])
@@ -49,10 +51,18 @@ def post_login():
             db.session.commit()
             login_user(user)
             
+            current_time = datetime.now()
+            current_unix_time = current_time.timestamp()
+            expired_time = current_unix_time + (15 * 60)
+            
+            token = jwtEncode({
+                'expired_time': expired_time
+            })
+            
             return make_response(
                 jsonify({
-                    'message':'logged in',
-                    'api_key': user.api_key
+                    'message':'logged in success',
+                    'access_token': token
                 })
             )
     return make_response(
