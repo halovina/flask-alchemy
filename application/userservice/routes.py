@@ -53,7 +53,7 @@ def post_login():
             
             current_time = datetime.now()
             current_unix_time = current_time.timestamp()
-            expired_time = current_unix_time + (15 * 60)
+            expired_time = current_unix_time + (1 * 60)
             
             token = jwtEncode({
                 'expired_time': expired_time
