@@ -27,4 +27,7 @@ def create_app():
         from .blog import blog_api_blueprint
         app.register_blueprint(blog_api_blueprint)
         
+        from .apitoken import apitoken_blueprint
+        app.register_blueprint(apitoken_blueprint)
+        
         return app
