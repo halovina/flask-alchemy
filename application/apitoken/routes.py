@@ -1,6 +1,6 @@
 from .import apitoken_blueprint
 from flask import jsonify, make_response, request
-from application.internal.enkripsi import signature_auth, verified_signature_auth
+from application.internal.enkripsi import signature_auth, verify_signature_auth, bearer_token
 
 @apitoken_blueprint.route('/apitoken/signature-auth', methods=['POST'])
 def signature_auth_token():
@@ -15,30 +15,31 @@ def signature_auth_token():
         }), 200
     )
     
+
 @apitoken_blueprint.route('/apitoken/access-token-b2b', methods=['POST'])
-def access_token_b2b():
+def verify_signature_auth_token():
     xtimestamp = request.headers.get('X-TIMESTAMP')
     xclientkey = request.headers.get('X-CLIENT-KEY')
     string_tosign = "{}|{}".format(xclientkey, xtimestamp)
+    
     signature = request.headers.get('X-SIGNATURE')
     
-    verified_signature = verified_signature_auth(string_tosign, signature)
-    
-    if verified_signature:
+    if verify_signature_auth(signature, string_tosign):
         return make_response(
+            #generate bearer token
+            
             jsonify({
                 "responseMessage":"Successful",
-                "accessToken":"eyJhbGciOiJI",
+                "accessToken": bearer_token(xclientkey, string_tosign),
                 "tokenType":"Bearer",
                 "expiresIn":"900",
                 "additionalInfo":{}
-            }), 200
+                }), 200
         )
     
     return make_response(
         jsonify({
-            "responseMessage":"Unauthorized",
-        }), 401
+            "responseMessage":"Unatuhorized",
+            }), 401
     )
-    
     
