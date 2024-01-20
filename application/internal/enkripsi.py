@@ -6,6 +6,8 @@ import base64
 from .configkey import publicKey
 from datetime import datetime
 from .pyjwt import jwtEncode
+import hmac
+import hashlib
 
 def signature_auth(privKey, stringToSign):
     digest = SHA256.new(bytes(stringToSign, 'utf-8'))
@@ -32,6 +34,15 @@ def bearer_token(client_key, string_tosign):
         'client_key': client_key,
         'string_tosign': string_tosign
     })
+    
 
+def hmac_signature_service(secret_key, string_tosign):
+    hmac_digest = hmac.new(
+        key=bytes(secret_key, 'utf-8'),
+        msg=bytes(string_tosign, 'utf-8'),
+        digestmod=hashlib.sha512
+    ).digest()
+    
+    return base64.b64encode(hmac_digest).decode()
 
 

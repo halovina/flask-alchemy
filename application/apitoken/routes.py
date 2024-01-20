@@ -1,6 +1,10 @@
 from .import apitoken_blueprint
 from flask import jsonify, make_response, request
-from application.internal.enkripsi import signature_auth, verify_signature_auth, bearer_token
+from application.internal.enkripsi import (signature_auth, verify_signature_auth, bearer_token,
+                                           hmac_signature_service)
+
+from .common import string_to_hex, json_to_minify
+
 
 @apitoken_blueprint.route('/apitoken/signature-auth', methods=['POST'])
 def signature_auth_token():
@@ -43,3 +47,35 @@ def verify_signature_auth_token():
             }), 401
     )
     
+    
+@apitoken_blueprint.route('/apitoken/signature-service', methods=['POST'])
+def hmac_sugnature_auth_service():
+    xtimestamp = request.headers.get('X-TIMESTAMP')
+    xsecretkey= request.headers.get('X-CLIENT-SECRET')
+    accesstoken = request.headers.get('AccessToken')
+    endpointurl = request.headers.get('EndpoinUrl')
+    bodyReq = request.json
+    
+    secretKey = "{}|{}|{}".format(
+        xsecretkey,
+        xtimestamp,
+        accesstoken
+    )
+    
+    stringToSign = "{}:{}:{}:{}:{}:{}".format(
+        "POST",
+        endpointurl,
+        accesstoken,
+        string_to_hex(json_to_minify(bodyReq)),
+        xtimestamp,
+        xsecretkey
+    )
+    
+    
+    signature = hmac_signature_service(secret_key=secretKey, string_tosign=stringToSign)
+    
+    return make_response(
+        jsonify({
+            'signature': signature
+        })
+    )
