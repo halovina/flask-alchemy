@@ -46,3 +46,11 @@ def hmac_signature_service(secret_key, string_tosign):
     return base64.b64encode(hmac_digest).decode()
 
 
+def verify_hmac_signature_service(secret_key, string_tosign, signature):
+    hmac_digest = hmac.new(
+        key=bytes(secret_key, 'utf-8'),
+        msg=bytes(string_tosign, 'utf-8'),
+        digestmod=hashlib.sha512
+    ).digest()
+    
+    return hmac.compare_digest(base64.b64decode(signature), hmac_digest) #true or false

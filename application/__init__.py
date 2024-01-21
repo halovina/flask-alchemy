@@ -30,4 +30,7 @@ def create_app():
         from .apitoken import apitoken_blueprint
         app.register_blueprint(apitoken_blueprint)
         
+        from .balance import balance_blueprint
+        app.register_blueprint(balance_blueprint)
+        
         return app

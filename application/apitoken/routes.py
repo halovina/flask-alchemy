@@ -56,6 +56,8 @@ def hmac_sugnature_auth_service():
     endpointurl = request.headers.get('EndpoinUrl')
     bodyReq = request.json
     
+    print(request.base_url)
+    
     secretKey = "{}|{}|{}".format(
         xsecretkey,
         xtimestamp,
@@ -79,3 +81,4 @@ def hmac_sugnature_auth_service():
             'signature': signature
         })
     )
+    
