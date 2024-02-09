@@ -1,5 +1,6 @@
 import os 
 from dotenv import load_dotenv
+import redis
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'env')
 if os.path.exists(dotenv_path):
@@ -15,6 +16,12 @@ class DevelopmentConfig:
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
     SQLALCHEMY_ECHO = True
+    
+    SECRET_KEY = os.environ['SECRET_KEY']
+    SESSION_TYPE = 'redis'
+    SESSION_PERMANENT = False
+    SESSION_USE_SIGNER = True
+    SESSION_REDIS = redis.from_url('redis://127.0.0.1:6379')
     
 
 class ProductionConfig:
