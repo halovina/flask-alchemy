@@ -1,0 +1,22 @@
+<!doctype html>
+<title>chat</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<p><b>Live Chat !</b></p>
+<p>Message: <input id="sendMessage" /></p>
+<pre id="getMessage"></pre>
+<script>
+    function sse() {
+        var source = new EventSource('/pubsub/get-event-stream');
+        var getMessage = document.getElementById('getMessage');
+        source.onmessage = function(e) {
+            getMessage.innerHTML =  e.data + "\n" + getMessage.innerHTML;
+        };
+    }
+    $('#sendMessage').keyup(function(e){
+        if (e.keyCode == 13) {
+            $.post('/pubsub/post-message', {'message': $(this).val()});
+            $(this).val('');
+        }
+    });
+    sse();
+</script>
