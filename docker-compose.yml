@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  flask-app:
+    environment:
+      - CONFIGURATION_SETUP= 'development'
+    build: .
+    ports:
+      - "6711:5000"
