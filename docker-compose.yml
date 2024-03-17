@@ -2,8 +2,35 @@ version: '3.8'
 
 services:
   flask-app:
+    container_name: flask_alchemy
     environment:
-      - CONFIGURATION_SETUP= 'development'
+      - CONFIGURATION_SETUP=development
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_DATABASE=flask_alchemy
+      - MYSQL_HOST=mysql
     build: .
+    links:
+      #network connection with these service
+      - mysql
+    depends_on:
+      - mysql
     ports:
       - "6711:5000"
+      
+  mysql:
+    container_name: flask_mysql
+    image: mysql:8.3
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: flask_alchemy
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+  #just a persistance data
+  mysql-data:
+    driver: local

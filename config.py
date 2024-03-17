@@ -13,8 +13,13 @@ class Config:
 class DevelopmentConfig:
     ENV = "development"
     DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
-    # SQLALCHEMY_ECHO = True
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}/{}'.format(
+        os.environ['MYSQL_USER'],
+        os.environ['MYSQL_DATABASE'],
+        os.environ['MYSQL_HOST'],
+        os.environ['MYSQL_DATABASE']
+    )
+    SQLALCHEMY_ECHO = True
     
 
 class ProductionConfig:

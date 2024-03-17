@@ -1,9 +1,9 @@
 import os
 from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from config import DevelopmentConfig, ProductionConfig
 
-# db = SQLAlchemy()
+db = SQLAlchemy()
 
 
 def create_app():
@@ -16,7 +16,7 @@ def create_app():
     else:
         app.logger.info('FLASK_ENV is NULL !!')
     
-    # db.init_app(app)
+    db.init_app(app)
     
     with app.app_context():
         return app
