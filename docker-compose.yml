@@ -8,7 +8,7 @@ services:
       - CELERY_BROKER_URL=redis://redis/0
       - CELERY_RESULT_BACKEND=redis://redis/0
       - CONFIGURATION_SETUP=development
-      - SECRET_KEY=sdfdfsKSDFD898998232m
+      - SECRET_KEY=
     build: .
     links:
       - redis
@@ -20,7 +20,7 @@ services:
       - CELERY_BROKER_URL=redis://redis/0
       - CELERY_RESULT_BACKEND=redis://redis/0
       - CONFIGURATION_SETUP=development
-      - SECRET_KEY=sdfdfsKSDFD898998232m
+      - SECRET_KEY=
     build: .
     entrypoint: celery
     command: -A application.celery worker --loglevel=info
