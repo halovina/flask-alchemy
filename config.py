@@ -9,23 +9,23 @@ if os.path.exists(dotenv_path):
     
 class Config:
     SCRET_KEY = os.environ['CONFIGURATION_SETUP']
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 class DevelopmentConfig:
     ENV = "development"
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
+    # SQLALCHEMY_ECHO = True
     
     SECRET_KEY = os.environ['SECRET_KEY']
     SESSION_TYPE = 'redis'
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
-    SESSION_REDIS = redis.from_url('redis://127.0.0.1:6379')
+    SESSION_REDIS = redis.from_url('redis://redis')
     
 
 class ProductionConfig:
     ENV = "production"
     DEBUG = True
-    SQLALCHEMY_DATABSE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_DATABSE_URI = 'mysql+pymysql://admin:admin@localhost/flask-alchemy'
+    # SQLALCHEMY_ECHO = True

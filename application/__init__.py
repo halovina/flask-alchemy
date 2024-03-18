@@ -1,21 +1,27 @@
 import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 import redis
 from celery import Celery
+from config import DevelopmentConfig, ProductionConfig
 
 
-db = SQLAlchemy()
+# db = SQLAlchemy()
 
 dbredis = redis.Redis(decode_responses=True)
 
 def create_app(**kwargs):
     app = Flask(__name__)
     environment_configuration = os.environ['CONFIGURATION_SETUP']
-    app.config.from_object(environment_configuration)
+    if environment_configuration == 'develoment':
+        app.config.from_object(DevelopmentConfig)
+    elif environment_configuration == 'production':
+        app.config.from_object(ProductionConfig)
+    else:
+        app.logger.info('FLASK_ENV is NULL !!')
     
-    db.init_app(app)
+    # db.init_app(app)
     Session(app)
     
     with app.app_context():
@@ -34,8 +40,8 @@ def create_app(**kwargs):
 def make_celery(app_name=__name__):
     return Celery(
         app_name,
-        broker = 'redis://localhost:6379/0',
-        backend = 'redis://localhost:6379/0',
+        broker = os.environ['CELERY_BROKER_URL'],
+        backend = os.environ['CELERY_RESULT_BACKEND'],
         include=['application.celeryexample.tasks']
     )
     

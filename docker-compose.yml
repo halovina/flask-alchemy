@@ -1,0 +1,36 @@
+version: '3'
+services:
+  flask_app:
+    container_name: flask_alchemy
+    ports:
+      - "6711:5000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis/0
+      - CELERY_RESULT_BACKEND=redis://redis/0
+      - CONFIGURATION_SETUP=development
+      - SECRET_KEY=sdfdfsKSDFD898998232m
+    build: .
+    links:
+      - redis
+    depends_on:
+      - redis
+  worker:
+    container_name: flask_worker
+    environment:
+      - CELERY_BROKER_URL=redis://redis/0
+      - CELERY_RESULT_BACKEND=redis://redis/0
+      - CONFIGURATION_SETUP=development
+      - SECRET_KEY=sdfdfsKSDFD898998232m
+    build: .
+    entrypoint: celery
+    command: -A application.celery worker --loglevel=info
+    links:
+      - redis
+    depends_on:
+      - redis
+    
+  redis:
+    container_name: flask_redis
+    image: redis:alpine
+    ports:
+      - "63790:6739"
