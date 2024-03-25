@@ -1,0 +1,38 @@
+version: '3'
+services:
+  rabbitmq:
+    container_name: rabbitmq-server
+    image: rabbitmq:3.13-management
+    ports:
+      - "15673:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=flask
+      - RABBITMQ_DEFAULT_PASS=admin
+
+  flask_app:
+    container_name: flask_app
+    ports:
+      - "6711:5000"
+    environment:
+      - CELERY_BROKER_URL=pyamqp://flask:admin@rabbitmq
+      - CELERY_RESULT_BACKEND=rpc://flask:admin@rabbitmq
+      - CONFIGURATION_SETUP=development
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    build: .
+  
+  flask_worker:
+    container_name: flask_worker
+    environment:
+      - CELERY_BROKER_URL=pyamqp://flask:admin@rabbitmq
+      - CELERY_RESULT_BACKEND=rpc://flask:admin@rabbitmq
+      - CONFIGURATION_SETUP=development
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    entrypoint: celery
+    command: -A application.celery worker --loglevel=info
+    build: .
